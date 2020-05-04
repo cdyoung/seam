@@ -144,8 +144,6 @@ get_bip = function(pitcher_name, batter_name, b_hand, pitch, pitches_bip) {
 }
 
 bin_pitches = function(pitches_bip, synth_master) {
-  pitches_bin = read.csv("./data/pitches_bin.csv", stringsAsFactors = FALSE) %>%
-    mutate(bin_all = as.character(bin_all))
 
   density1 = synth_master %>%
     mutate(bin_x = cut(x, breaks = seq(-160, 160, 10), labels = FALSE),
@@ -293,7 +291,6 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
   }
 
   # master pitcher weights
-  fangraphs_pitchers = read.csv("./data/fangraphs_pitchers.csv", stringsAsFactors = FALSE)
   pitcher_similarities_master = bind_rows(pitcher_similarities_master) %>%
     left_join(pitcher_avg, by = "pitch_type") %>%
     group_by(pitcher, game_year) %>%
@@ -310,7 +307,6 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
     select(Name, Season, Similarity, IP, ERA, `K%`, `BB%`, xFIP, fWAR)
 
   # master batter weights
-  fangraphs_batters = read.csv("./data/fangraphs_batters.csv", stringsAsFactors = FALSE)
   batter_similarities_master = bind_rows(batter_similarities_master) %>%
     filter(n >= 10) %>%
     left_join(pitcher_avg, by = "pitch_type") %>%

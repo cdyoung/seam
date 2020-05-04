@@ -1,3 +1,4 @@
+# load packages
 library(shiny)
 library(dplyr)
 library(ggplot2)
@@ -6,7 +7,14 @@ library(shinyjs)
 library(shinyhelper)
 library(DT)
 
+# load additional functions
 source("./modules.R")
+
+# load data
+pitches_bin = read.csv("./data/pitches_bin.csv", stringsAsFactors = FALSE) %>%
+    mutate(bin_all = as.character(bin_all))
+fangraphs_pitchers = read.csv("./data/fangraphs_pitchers.csv", stringsAsFactors = FALSE)
+fangraphs_batters = read.csv("./data/fangraphs_batters.csv", stringsAsFactors = FALSE)
 
 ui = tagList(
     fluidPage(theme = "flatly.css",
