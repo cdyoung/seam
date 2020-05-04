@@ -1,6 +1,5 @@
 library(shiny)
 library(RMySQL)
-library(illinibaseball)
 library(dplyr)
 library(ggplot2)
 library(shinyjs)
