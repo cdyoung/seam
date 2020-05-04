@@ -193,13 +193,13 @@ graph_field = function(data, title) {
     geom_curve(aes(x = -100, y = 100, xend = 100, yend = 100), color = "black", curvature = -0.8) +
     xlim(-150, 150) + ylim(0, 210) + ggtitle(title) + coord_fixed() +
     xlab("") + ylab("") +
-    theme(axis.line=element_blank(),
-          axis.text.x=element_blank(),
-          axis.text.y=element_blank(),
-          panel.background=element_blank(),
-          panel.border=element_blank(),
-          panel.grid.major=element_blank(),
-          axis.ticks=element_blank(),
+    theme(axis.line = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          panel.background = element_blank(),
+          panel.border = element_blank(),
+          panel.grid.major = element_blank(),
+          axis.ticks = element_blank(),
           plot.title = element_text(size = 20))
 
   return(g)

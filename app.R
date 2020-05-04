@@ -31,7 +31,7 @@ ui = tagList(
                                                                                    "",
                                                                                    "<b>xBsCON</b>: Expected bases on contact (slg% except the denominator is BIP + HR instead of AB)")),
                                                                 align = "center")),
-                                                tabsetPanel(id="tables",
+                                                tabsetPanel(id = "tables",
                                                             tabPanel("Traditional Batter", plotOutput("traditional")),
                                                             tabPanel("Synthetic Batter",
                                                                      fluidRow(
