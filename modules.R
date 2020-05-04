@@ -9,7 +9,7 @@ load_batter_pool = function(season) {
 }
 
 load_bip = function(season) {
-  pitches = read.csv("./data/hittr_bip.csv", stringsAsFactors = FALSE)
+  pitches = data.table::fread("./data/hittr_bip.csv", data.table = FALSE)
   return(pitches)
 }
 
