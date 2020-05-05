@@ -133,7 +133,7 @@ get_density = function(pitcher_name, p_hand, batter_name, b_hand, pitch, weights
 }
 
 get_bip = function(pitcher_name, batter_name, b_hand, pitch, pitches_bip) {
-  pitches_batter = pitches_bip %>% filter(stand == b_hand)
+  pitches_batter = pitches_bip
 
   if (batter_name != "all") {
     pitches_batter = pitches_batter %>% filter(batter == batter_name)
