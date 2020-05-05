@@ -79,10 +79,12 @@ get_similarity = function(name, hand, pitch, ratio, pitches_pool, type) {
     m[s, s] = (1 - ratio) * ncol(pool) / length(not_stuff)
   }
 
+  characteristics = as.numeric(characteristics)
+
   pool$similarity = apply(pool, 1, function(p) {
-    temp = matrix(as.numeric(characteristics - p), byrow = TRUE)
-    distance = sqrt(t(temp) %*% m %*% temp)
-    exp(-distance)})
+    temp = characteristics - p
+    exp(-sqrt(crossprod(temp, m) %*% temp))
+  })
 
   master = pool %>%
     select(similarity) %>%
