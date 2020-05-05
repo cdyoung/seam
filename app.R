@@ -155,17 +155,21 @@ server = function(input, output, session) {
   run = function(b_hand, pitches_bip) {
     withProgress(message = "Synthesizing...", value = 0, {
       master = synthetic(input$pitcher, input$batter, b_hand, pitcher_pool, batter_pool, pitches_bip, input$p_ratio, input$b_ratio)
+      if (length(master) == 0) {
+        showNotification("Congratulations! You've selected a pitcher that doesn't have enough data. Please try again.")
+        return()
+      }
 
       incProgress(1/2)
 
       output$traditional = renderPlot({
-        graph_field(master$traditional, isolate(paste0(input$batter, " vs. All (no weights)")))
+        graph_field(master$traditional, master, isolate(paste0(input$batter, " vs. All (no weights)")))
       })
 
       incProgress(1/8)
 
       output$synth_batter = renderPlot({
-        graph_field(master$synth_batter, isolate(paste0("Synthetic ", input$batter, " vs. ", input$pitcher)))
+        graph_field(master$synth_batter, master, isolate(paste0("Synthetic ", input$batter, " vs. ", input$pitcher)))
       })
 
       output$synth_batter_similarities = renderTable({
@@ -180,7 +184,7 @@ server = function(input, output, session) {
       incProgress(1/8)
 
       output$synth_pitcher = renderPlot({
-        graph_field(master$synth_pitcher, isolate(paste0(input$batter, " vs. Synthetic ", input$pitcher)))
+        graph_field(master$synth_pitcher, master, isolate(paste0(input$batter, " vs. Synthetic ", input$pitcher)))
       })
 
       output$synth_pitcher_similarities = renderTable({
@@ -195,7 +199,7 @@ server = function(input, output, session) {
       incProgress(1/8)
 
       output$synth_master = renderPlot({
-        graph_field(master$synth_master, "")
+        graph_field(master$synth_master, master, "")
       })
 
       output$synth_stats = renderTable({

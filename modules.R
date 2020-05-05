@@ -186,11 +186,17 @@ bin_pitches = function(pitches_bip, synth_master) {
   return(density_agg)
 }
 
-graph_field = function(data, title) {
-  data_f = data %>% filter(z > quantile(z, 0.6))
+graph_field = function(data, master, title) {
+  data_f = data #%>% filter(z > quantile(z, 0.6))
+
+  max_density = max(c(master$traditional$z,
+                         master$synth_pitcher$z,
+                         master$synth_batter$z,
+                         master$synth_master$z))
+
   g = ggplot(data_f) +
     geom_point(aes(x, y, color = z)) +
-    scale_color_gradient2(mid = "white", low = "blue", high = "red", midpoint = (max(data$z) + min(data$z)) / 2) +
+    scale_color_gradient2(mid = "#ff564a", low = "white", high = "#ff1100", midpoint = max_density / 2, limits = c(0, max_density)) +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
     geom_segment(aes(x = 0, y = 0, xend = -100, yend = 100), color = "black") +
     geom_segment(aes(x = 0, y = 0, xend = 100, yend = 100), color = "black") +
@@ -233,6 +239,16 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
     group_by(pitcher, game_year) %>%
     filter(sum(pitcher_avg$pitch_type %in% unique(pitch_type)) >= ceiling(nrow(pitcher_avg) / 2)) %>%
     ungroup()
+
+  for (pitch in pitcher_avg$pitch_type) {
+    pool_test = pitcher_pool %>%
+      filter(pitch_type == pitch,
+             pitcher == pitcher_name)
+
+    if (nrow(pool_test) == 0) {
+      return(list())
+    }
+  }
 
   synth_pitcher = empty_density()
   synth_batter = empty_density()
