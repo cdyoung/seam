@@ -1,14 +1,19 @@
-load_pitcher_pool = function(season) {
-  pitches = read.csv("./data/hittr_pitcher_pool.csv", stringsAsFactors = FALSE)
+# load data
+pitches_bin = data.table::fread("./data/pitches_bin.csv", data.table = FALSE) %>% mutate(bin_all = as.character(bin_all))
+fangraphs_pitchers = data.table::fread("./data/fangraphs_pitchers.csv", data.table = FALSE)
+fangraphs_batters = data.table::fread("./data/fangraphs_batters.csv", data.table = FALSE)
+
+load_pitcher_pool = function() {
+  pitches = data.table::fread("./data/hittr_pitcher_pool.csv", data.table = FALSE)
   return(pitches)
 }
 
-load_batter_pool = function(season) {
-  pitches = read.csv("./data/hittr_batter_pool.csv", stringsAsFactors = FALSE)
+load_batter_pool = function() {
+  pitches = data.table::fread("./data/hittr_batter_pool.csv", data.table = FALSE)
   return(pitches)
 }
 
-load_bip = function(season) {
+load_bip = function() {
   pitches = data.table::fread("./data/hittr_bip.csv", data.table = FALSE)
   return(pitches)
 }
@@ -298,9 +303,7 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
     inner_join(fangraphs_pitchers, by = c("pitcher" = "Name", "game_year" = "Season")) %>%
     rename(Name = pitcher,
            Season = game_year,
-           Similarity = similarity,
-           `K%` = `K.`,
-           `BB%` = `BB.`) %>%
+           Similarity = similarity) %>%
     mutate(ERA = format(ERA, nsmall = 2),
            xFIP = format(xFIP, nsmall = 2),
            fWAR = format(round(WAR, 1), nsmall = 1)) %>%
@@ -316,8 +319,7 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
     inner_join(fangraphs_batters, by = c("batter" = "Name", "game_year" = "Season")) %>%
     rename(Name = batter,
            Season = game_year,
-           Similarity = similarity,
-           `wRC+` = `wRC.`) %>%
+           Similarity = similarity) %>%
     mutate(AVG = gsub("^0(.*)", "\\1", format(AVG, nsmall = 3)),
            OBP = gsub("^0(.*)", "\\1", format(OBP, nsmall = 3)),
            SLG = gsub("^0(.*)", "\\1", format(SLG, nsmall = 3)),
