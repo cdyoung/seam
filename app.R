@@ -72,8 +72,6 @@ server = function(input, output, session) {
 
     incProgress(1/4)
 
-    pitches_bip = load_bip()
-
     incProgress(1/2)
   })
 
@@ -145,10 +143,16 @@ server = function(input, output, session) {
       b_hand = unique(b_hand$stand)
     }
 
-    run(b_hand)
+    if (b_hand == "L") {
+      pitches_bip = data.table::fread("./data/hittr_bip_lhb.csv", data.table = FALSE)
+    } else {
+      pitches_bip = data.table::fread("./data/hittr_bip_rhb.csv", data.table = FALSE)
+    }
+
+    run(b_hand, pitches_bip)
   })
 
-  run = function(b_hand) {
+  run = function(b_hand, pitches_bip) {
     withProgress(message = "Synthesizing...", value = 0, {
       master = synthetic(input$pitcher, input$batter, b_hand, pitcher_pool, batter_pool, pitches_bip, input$p_ratio, input$b_ratio)
 
@@ -223,8 +227,11 @@ server = function(input, output, session) {
 }
 
 sidebar = function(pitcher_pool, batter_pool) {
+  pitchers = pitcher_pool %>% filter(game_year == 0) %>% arrange(pitcher)
+  batters = batter_pool %>% filter(game_year == 0) %>% arrange(batter)
+
   tags = tagList(
-    selectizeInput("pitcher", label = "Pitcher", choices = unique(pitcher_pool %>% arrange(pitcher) %>% select(pitcher)), selected = "Justin Verlander"),
+    selectizeInput("pitcher", label = "Pitcher", choices = unique(pitchers$pitcher), selected = "Justin Verlander"),
     helper(sliderInput("p_ratio", "Ratio of Stuff to Release", min = .50, max = 1, value = .85),
            type = "inline",
            fade = TRUE,
@@ -237,7 +244,7 @@ sidebar = function(pitcher_pool, batter_pool) {
                        "<i>For example, a value of .66 would make stuff twice as important as release point when comparing pitchers.</i>")),
     tags$i("Suggested pitchers: Gerrit Cole, Jacob deGrom", style = "color: darkgray"),
     hr(),
-    selectizeInput("batter", label = "Batter", choices = unique(batter_pool %>% arrange(batter) %>% select(batter)), selected = "Mike Trout"),
+    selectizeInput("batter", label = "Batter", choices = unique(batters$batter), selected = "Mike Trout"),
     helper(sliderInput("b_ratio", "Ratio of LA/EV to Batted Ball Location", min = 0, max = 1, value = .85),
            type = "inline",
            fade = TRUE,
