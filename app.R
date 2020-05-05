@@ -11,11 +11,6 @@ library(DT)
 # load additional functions
 source("./modules.R")
 
-# load data
-pitches_bin = read.csv("./data/pitches_bin.csv", stringsAsFactors = FALSE) %>% mutate(bin_all = as.character(bin_all))
-fangraphs_pitchers = read.csv("./data/fangraphs_pitchers.csv", stringsAsFactors = FALSE)
-fangraphs_batters = read.csv("./data/fangraphs_batters.csv", stringsAsFactors = FALSE)
-
 ui = tagList(
   fluidPage(theme = "flatly.css",
         tags$head(
@@ -27,17 +22,17 @@ ui = tagList(
                   sidebarLayout(
                     sidebarPanel(uiOutput("sidebar")),
                     mainPanel(column(width = 12,
-                             fluidRow(uiOutput("synth_title"), align = "center"),
-                             plotOutput("synth_master"),
-                             fluidRow(helper(tableOutput("synth_stats"),
-                                     type = "inline",
-                                     fade = TRUE,
-                                     title = "Stats",
-                                     content = c("Spray chart density averaged over 100 balls in play",
-                                                 "",
-                                                 "<b>xBABIP</b>: Expected batting average on balls in play",
-                                                 "",
-                                                 "<b>xBsCON</b>: Expected bases on contact (slg% except the denominator is BIP + HR instead of AB)")),
+                              fluidRow(uiOutput("synth_title"), align = "center"),
+                              plotOutput("synth_master"),
+                              fluidRow(helper(tableOutput("synth_stats"),
+                                      type = "inline",
+                                      fade = TRUE,
+                                      title = "Stats",
+                                      content = c("Spray chart density averaged over 100 balls in play",
+                                                  "",
+                                                  "<b>xBABIP</b>: Expected batting average on balls in play",
+                                                  "",
+                                                  "<b>xBsCON</b>: Expected bases on contact (slg% except the denominator is BIP + HR instead of AB)")),
                                      align = "center")),
                         tabsetPanel(id = "tables",
                               tabPanel("Traditional Batter", plotOutput("traditional")),
@@ -87,8 +82,8 @@ server = function(input, output, session) {
   })
 
   output$leaderboard = renderDataTable({
-    top10_pitchers = read.csv("./data/top10_pitchers.csv", stringsAsFactors = FALSE)
-    top10_batters = read.csv("./data/top10_batters.csv", stringsAsFactors = FALSE)
+    top10_pitchers = data.table::fread("./data/top10_pitchers.csv", data.table = FALSE)
+    top10_batters = data.table::fread("./data/top10_batters.csv", data.table = FALSE)
 
     rows = bind_rows(top10_pitchers, top10_batters)
     rows = rows[!duplicated(rows[c("batter", "pitcher")]),]
