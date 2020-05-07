@@ -119,7 +119,7 @@ get_density = function(pitcher_name, p_hand, batter_name, b_hand, pitch, weights
   }
 
   # return empty if not enough bip
-  if (nrow(bip) < 2) {
+  if (nrow(bip) < 3) {
     return(empty_density())
   }
 

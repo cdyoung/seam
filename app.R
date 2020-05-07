@@ -139,7 +139,12 @@ server = function(input, output, session) {
 
       showNotification(paste0("This batter is a switch hitter. Based on the selected pitcher, we are assuming he is batting ", p_hand, "."))
     } else {
-      b_hand = batter_pool %>% filter(batter == input$batter)
+      b_hand = batter_pool %>% filter(batter == input$batter, game_year != 0)
+      if (nrow(b_hand) == 0) {
+        showNotification("Congratulations! You've selected a batter that doesn't have enough data. Please try again.")
+        return()
+      }
+
       b_hand = unique(b_hand$stand)
     }
 
