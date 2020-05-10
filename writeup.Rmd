@@ -1,3 +1,5 @@
+[Click here](https://publish.illinois.edu/danieleck/files/2020/05/spray.pdf) for our manuscript.
+
 ## Data
 
 ### Acquisition
@@ -56,7 +58,7 @@ Once similarities are calculated, balls in play are collected for the synthetic 
 There is a slight difference for batter density. If the actualy matchup (main batter vs. main pitcher) has only 1 observation, that one observation is added to the batted ball similarities with a similarity of 1.
 
 ### Lambda
-Now that densities are calculated (on a pitch type basis), they are combined using the three lambda values. See Dan's paper for more.
+Now that densities are calculated (on a pitch type basis), they are combined using the three lambda values. See [our paper](https://publish.illinois.edu/danieleck/files/2020/05/spray.pdf) for more.
 
 ### Combining
 At this point, each of the main pitcher's pitch types (with at least 5% BIP breakdown) have been iterated over, calculating synthetic pitchers, batters, and the real matchup. These three categories have been combined using lambdas so that there is one density per pitch type. The last step is to combine these densities by the % BIP of the main pitcher's pitch types.
