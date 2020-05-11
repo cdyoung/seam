@@ -125,10 +125,10 @@ server = function(input, output, session) {
   })
 
   observeEvent(input$submit, {
-    if (input$batter %in% switch_hitters$batter) {
-      p_hand = pitcher_pool %>% filter(pitcher == input$pitcher)
-      p_hand = unique(p_hand$p_throws)
+    p_hand = pitcher_pool %>% filter(pitcher == input$pitcher)
+    p_hand = unique(p_hand$p_throws)[1]
 
+    if (input$batter %in% switch_hitters$batter) {
       if (p_hand == "R") {
         b_hand = "L"
         p_hand = "left handed"
@@ -154,10 +154,10 @@ server = function(input, output, session) {
       pitches_bip = data.table::fread("./data/hittr_bip_rhb.csv", data.table = FALSE)
     }
 
-    run(b_hand, pitches_bip)
+    run(b_hand, pitches_bip, p_hand)
   })
 
-  run = function(b_hand, pitches_bip) {
+  run = function(b_hand, pitches_bip, p_hand) {
     withProgress(message = "Synthesizing...", value = 0, {
       master = synthetic(input$pitcher, input$batter, b_hand, pitcher_pool, batter_pool, pitches_bip, input$p_ratio, input$b_ratio)
       if (length(master) == 0) {
@@ -227,7 +227,7 @@ server = function(input, output, session) {
       caption.placement = getOption("xtable.caption.placement", "top"))
 
       output$synth_title = renderUI({
-        h2(isolate(paste0(input$batter, " vs. ", input$pitcher)))
+        h2(isolate(paste0(input$batter, " (", b_hand, ")  vs. ", input$pitcher, " (", p_hand, ")")))
       })
 
       incProgress(1/8)

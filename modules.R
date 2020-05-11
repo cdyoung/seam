@@ -194,14 +194,34 @@ graph_field = function(data, master, title) {
                          master$synth_batter$z,
                          master$synth_master$z))
 
-  g = ggplot(data_f) +
-    geom_point(aes(x, y, color = z)) +
-    scale_color_gradient2(mid = "#ff564a", low = "white", high = "#ff1100", midpoint = max_density / 2, limits = c(0, max_density)) +
+  lines1 = data.frame(x = seq(0, -90, by = -.1),
+                      y = seq(0, 90, by = .1))
+
+  lines2 = data.frame(x = seq(0, 90, by = .1),
+                      y = seq(0, 90, by = .1))
+
+  lines3 = data.frame(x = c(rep(90, 5), rep(-90, 5)),
+                      y = rep(seq(90, 94), 2))
+
+  lines4 = data.frame(x = c(rep(40, 5), rep(-40, 5)),
+                      y = rep(seq(40, 44), 2))
+
+  curve1 = data.frame(x = seq(-90, 90, by = .1))
+  curve1$y = 90 + sqrt(76^2 * (1 - curve1$x^2 / 90^2))
+
+  curve2 = data.frame(x = seq(-50, 50, by = .1))
+  curve2$y = 40 + sqrt(33^2 * (1 - curve2$x^2 / 40^2))
+
+  g = ggplot() +
+    geom_contour_filled(data = data_f, aes(x, y, z = z, fill = stat(level))) +
+    scale_fill_brewer(palette = "Spectral") +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
-    geom_segment(aes(x = 0, y = 0, xend = -100, yend = 100), color = "black") +
-    geom_segment(aes(x = 0, y = 0, xend = 100, yend = 100), color = "black") +
-    geom_curve(aes(x = -50, y = 50, xend = 50, yend = 50), color = "black", curvature = -0.8) +
-    geom_curve(aes(x = -100, y = 100, xend = 100, yend = 100), color = "black", curvature = -0.8) +
+    geom_point(data = lines1, aes(x, y), size = .5) +
+    geom_point(data = lines2, aes(x, y), size = .5) +
+    geom_point(data = lines3, aes(x, y), size = .5) +
+    geom_point(data = lines4, aes(x, y), size = .5) +
+    geom_point(data = curve1, aes(x, y), size = .5) +
+    geom_point(data = curve2, aes(x, y), size = .5) +
     xlim(-150, 150) + ylim(0, 210) + ggtitle(title) + coord_fixed() +
     xlab("") + ylab("") +
     theme(axis.line = element_blank(),
