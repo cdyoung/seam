@@ -252,7 +252,6 @@ graph_field = function(data, master, title) {
   # using geom_points
   g = ggplot(data_f) +
     geom_point(aes(x, y, color = z), size = 5) +
-    scale_color_gradient(low = "white", high = "#ff0000", limits = c(0, max_density)) +
     scale_color_gradient2(low = "white", mid = "#ff0000", high = "#b30000", midpoint = max_density / 2, limits = c(0, max_density)) +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
     geom_point(data = lines1, aes(x, y), size = .5) +
