@@ -187,12 +187,24 @@ bin_pitches = function(pitches_bip, synth_master) {
 }
 
 graph_field = function(data, master, title) {
+
   data_f = data #%>% filter(z > quantile(z, 0.6))
 
   max_density = max(c(master$traditional$z,
                          master$synth_pitcher$z,
                          master$synth_batter$z,
                          master$synth_master$z))
+
+  # contour_quantiles = quantile(
+  #   c(
+  #     master$traditional$z,
+  #     master$synth_pitcher$z,
+  #     master$synth_batter$z,
+  #     master$synth_master$z
+  #   ),
+  #   # probs = c(0.4, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 0.98, 1)
+  #   probs = c(0.5, 0.75, 0.8, 0.9, 0.95, 0.98, 0.99, 0.999, 1)
+  # )
 
   lines1 = data.frame(x = seq(0, -90, by = -.1),
                       y = seq(0, 90, by = .1))
@@ -207,14 +219,40 @@ graph_field = function(data, master, title) {
                       y = rep(seq(40, 44), 2))
 
   curve1 = data.frame(x = seq(-90, 90, by = .1))
-  curve1$y = 90 + sqrt(76^2 * (1 - curve1$x^2 / 90^2))
+  curve1$y = 90 + sqrt(76 ^ 2 * (1 - curve1$x ^ 2 / 90 ^ 2))
 
-  curve2 = data.frame(x = seq(-50, 50, by = .1))
-  curve2$y = 40 + sqrt(33^2 * (1 - curve2$x^2 / 40^2))
+  curve2 = data.frame(x = seq(-40, 40, by = .1))
+  curve2$y = 40 + sqrt(33 ^ 2 * (1 - curve2$x ^ 2 / 40 ^ 2))
 
-  g = ggplot() +
-    geom_contour_filled(data = data_f, aes(x, y, z = z, fill = stat(level))) +
-    scale_fill_brewer(palette = "Spectral") +
+  # # using geom_contour_filled
+  # g = ggplot() +
+  #   # geom_contour_filled(data = data_f, aes(x, y, z = z), bins = 9) +
+  #   geom_contour_filled(data = data_f, aes(x, y, z = z), breaks = contour_quantiles) +
+  #   scale_fill_brewer(type = "seq") +
+  #   theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
+  #   geom_point(data = lines1, aes(x, y), size = .5) +
+  #   geom_point(data = lines2, aes(x, y), size = .5) +
+  #   geom_point(data = lines3, aes(x, y), size = .5) +
+  #   geom_point(data = lines4, aes(x, y), size = .5) +
+  #   geom_point(data = curve1, aes(x, y), size = .5) +
+  #   geom_point(data = curve2, aes(x, y), size = .5) +
+  #   xlim(-150, 150) + ylim(0, 210) + ggtitle(title) + coord_fixed() +
+  #   xlab("") + ylab("") +
+  #   theme(axis.line = element_blank(),
+  #         axis.text.x = element_blank(),
+  #         axis.text.y = element_blank(),
+  #         panel.background = element_blank(),
+  #         panel.border = element_blank(),
+  #         panel.grid.major = element_blank(),
+  #         axis.ticks = element_blank(),
+  #         plot.title = element_text(size = 20))
+  #
+  # return(g)
+
+  # using geom_points
+  g = ggplot(data_f) +
+    geom_point(aes(x, y, color = z), size = 5) +
+    scale_color_gradient2(low = "white", mid = "#ff0000", high = "#b30000", midpoint = max_density / 2, limits = c(0, max_density)) +
     theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
     geom_point(data = lines1, aes(x, y), size = .5) +
     geom_point(data = lines2, aes(x, y), size = .5) +
@@ -234,6 +272,11 @@ graph_field = function(data, master, title) {
           plot.title = element_text(size = 20))
 
   return(g)
+
+  # 3D visualization
+  # lattice::wireframe(z ~ x * y, data = data_f, zlim = c(0, max_density), drape = TRUE, screen = list(z = 40, x = -60))
+  # # lattice::wireframe(z ~ x * y, data = data_f, zlim = c(0, max_density), drape = TRUE)
+
 }
 
 empty_density = function() {
