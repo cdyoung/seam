@@ -234,31 +234,6 @@ graph_field = function(data, master, title) {
   curve2 = data.frame(x = seq(-40, 40, by = .1))
   curve2$y = 40 + sqrt(33 ^ 2 * (1 - curve2$x ^ 2 / 40 ^ 2))
 
-  # # using geom_contour_filled
-  # g = ggplot() +
-  #   # geom_contour_filled(data = data_f, aes(x, y, z = z), bins = 9) +
-  #   geom_contour_filled(data = data_f, aes(x, y, z = z), breaks = contour_quantiles) +
-  #   scale_fill_brewer(type = "seq") +
-  #   theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
-  #   geom_point(data = lines1, aes(x, y), size = .5) +
-  #   geom_point(data = lines2, aes(x, y), size = .5) +
-  #   geom_point(data = lines3, aes(x, y), size = .5) +
-  #   geom_point(data = lines4, aes(x, y), size = .5) +
-  #   geom_point(data = curve1, aes(x, y), size = .5) +
-  #   geom_point(data = curve2, aes(x, y), size = .5) +
-  #   xlim(-150, 150) + ylim(0, 210) + ggtitle(title) + coord_fixed() +
-  #   xlab("") + ylab("") +
-  #   theme(axis.line = element_blank(),
-  #         axis.text.x = element_blank(),
-  #         axis.text.y = element_blank(),
-  #         panel.background = element_blank(),
-  #         panel.border = element_blank(),
-  #         panel.grid.major = element_blank(),
-  #         axis.ticks = element_blank(),
-  #         plot.title = element_text(size = 20))
-  #
-  # return(g)
-
   # using geom_points
   g = ggplot(data_f) +
     geom_point(aes(x, y, color = z), size = 5) +
@@ -286,7 +261,6 @@ graph_field = function(data, master, title) {
   # 3D visualization
   # lattice::wireframe(z ~ x * y, data = data_f, zlim = c(0, max_density), drape = TRUE, screen = list(z = 40, x = -60))
   # # lattice::wireframe(z ~ x * y, data = data_f, zlim = c(0, max_density), drape = TRUE)
-
 }
 
 empty_density = function() {
