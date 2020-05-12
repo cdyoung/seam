@@ -54,7 +54,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This work is supported by:
 
-- Rami Dass and [ATLAS](https://atlas.illinois.edu/)
+- [ATLAS Infrastructure](https://atlas.illinois.edu/)
 - [Illini Analytics](https://sabermetrics.cs.illinois.edu/)
 
 This work was improved by helpful comments and feedback from:
