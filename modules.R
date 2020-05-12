@@ -29,6 +29,11 @@ get_similarity = function(name, hand, pitch, ratio, pitches_pool, type) {
              pitch_launch_h_c, pitch_launch_v_c,
              release_pos_x, release_pos_y, release_pos_z)
 
+    if (nrow(characteristics) == 0) {
+      showNotification("Congratulations! You've selected a pitcher that doesn't have enough data. Please try again.")
+      return(data.frame())
+    }
+
     pool = pitches_pool %>%
       filter(game_year != 0,
              p_throws == hand,
@@ -53,6 +58,11 @@ get_similarity = function(name, hand, pitch, ratio, pitches_pool, type) {
              pitch_type == pitch,
              stand == hand) %>%
       select(launch_speed, launch_angle, pull, cent, oppo)
+
+    if (nrow(characteristics) == 0) {
+      showNotification("Congratulations! You've selected a batter that doesn't have enough data. Please try again.")
+      return(data.frame())
+    }
 
     pool = pitches_pool %>%
       filter(game_year != 0,
@@ -125,7 +135,7 @@ get_density = function(pitcher_name, p_hand, batter_name, b_hand, pitch, weights
 
   # rescale weights
   bip$weight = bip$similarity / sum(bip$similarity)
-  est = ggtern::kde2d.weighted(bip$hc_x, bip$hc_y, n = 100, lims = c(-150, 150, 0, 200), w = bip$weight)
+  est = ggtern::kde2d.weighted(bip$hc_x, bip$hc_y, n = 100, lims = c(-150, 150, -10, 200), w = bip$weight)
   density = expand.grid(x = est$x, y = est$y)
   density$z = as.vector(est$z)
 
@@ -222,7 +232,7 @@ graph_field = function(data, master, title) {
     geom_point(data = lines4, aes(x, y), size = .5) +
     geom_point(data = curve1, aes(x, y), size = .5) +
     geom_point(data = curve2, aes(x, y), size = .5) +
-    xlim(-150, 150) + ylim(0, 210) + ggtitle(title) + coord_fixed() +
+    xlim(-150, 150) + ylim(-10, 210) + ggtitle(title) + coord_fixed() +
     xlab("") + ylab("") +
     theme(axis.line = element_blank(),
           axis.text.x = element_blank(),
@@ -238,7 +248,7 @@ graph_field = function(data, master, title) {
 
 empty_density = function() {
   return(expand.grid(x = seq(-150, 150, length.out = 100),
-                     y = seq(0, 200, length.out = 100)) %>% mutate(z = 0))
+                     y = seq(-10, 200, length.out = 100)) %>% mutate(z = 0))
 }
 
 synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_pool, pitches_bip, p_ratio, b_ratio) {
@@ -266,6 +276,7 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
              pitcher == pitcher_name)
 
     if (nrow(pool_test) == 0) {
+      showNotification("Congratulations! You've selected a pitcher that doesn't have enough data. Please try again.")
       return(list())
     }
   }
@@ -280,6 +291,10 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
   for (pitch in pitcher_avg$pitch_type) {
     # pitcher density
     pitcher_similarities = get_similarity(pitcher_name, p_hand, pitch, p_ratio, pitcher_pool, "pitcher")
+    if (nrow(pitcher_similarities) == 0) {
+      return(list())
+    }
+
     pitcher_density = get_density(pitcher_name, p_hand, batter_name, b_hand, pitch, pitcher_similarities, pitches_bip, "pitcher")
     pitcher_similarities_master[[pitch]] = pitcher_similarities %>% mutate(pitch_type = pitch)
     synth_pitcher$z = synth_pitcher$z + pitcher_density$z * pitcher_avg$weight[pitcher_avg$pitch_type == pitch]
@@ -287,6 +302,10 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
 
     # real matchup density
     batter_similarities = get_similarity(batter_name, b_hand, pitch, b_ratio, batter_pool, "batter")
+    if (nrow(batter_similarities) == 0) {
+      return(list())
+    }
+
     real_bip = get_bip(pitcher_name, batter_name, b_hand, pitch, pitches_bip)
     n = nrow(real_bip)
 
@@ -366,7 +385,7 @@ synthetic = function(pitcher_name, batter_name, b_hand, pitcher_pool, batter_poo
 
   # traditional batter
   bip = get_bip(pitcher_name = "all", batter_name, b_hand, pitch = "all", pitches_bip)
-  est = MASS::kde2d(bip$hc_x, bip$hc_y, n = 100, lims = c(-150, 150, 0, 200))
+  est = MASS::kde2d(bip$hc_x, bip$hc_y, n = 100, lims = c(-150, 150, -10, 200))
   traditional = expand.grid(x = est$x, y = est$y)
   traditional$z = as.vector(est$z)
 

@@ -161,7 +161,6 @@ server = function(input, output, session) {
     withProgress(message = "Synthesizing...", value = 0, {
       master = synthetic(input$pitcher, input$batter, b_hand, pitcher_pool, batter_pool, pitches_bip, input$p_ratio, input$b_ratio)
       if (length(master) == 0) {
-        showNotification("Congratulations! You've selected a pitcher that doesn't have enough data. Please try again.")
         return()
       }
 
