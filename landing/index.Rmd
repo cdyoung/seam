@@ -59,8 +59,10 @@ This work is supported by:
 
 This work was improved by helpful comments and feedback from:
 
-- [James Balamuta](https://www.thecoatlessprofessor.com/)
+- [Alan Nathan](http://baseball.physics.illinois.edu/)
 - [Jim Albert](http://www-math.bgsu.edu/~albert/)
+- [James Balamuta](https://www.thecoatlessprofessor.com/)
+- [John Marden](http://www.stat.istics.net/)
 - [Dootika Vats](http://home.iitk.ac.in/~dootika/)
 - [Dave Zhao](https://stat.illinois.edu/directory/profile/sdzhao)
 
