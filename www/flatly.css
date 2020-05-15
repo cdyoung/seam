@@ -1,3 +1,8 @@
+#home {
+  color: white !important;
+  text-decoration: none;
+}
+
 @font-face {
     font-family: 'Lato';
     font-style: normal;

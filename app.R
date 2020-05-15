@@ -20,7 +20,7 @@ ui = tagList(
         ),
         navbarPage(id = "tabs",
                    windowTitle = "SEAM",
-             title = HTML("<a href=\"../index.html\">SEAM</a>"),
+             title = HTML("<a id=\"home\"href=\"../index.html\">SEAM</a>"),
              tabPanel(title = "Synthetic Matchup",
                   sidebarLayout(
                     sidebarPanel(uiOutput("sidebar")),
