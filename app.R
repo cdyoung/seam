@@ -17,7 +17,7 @@ ui = tagList(
           tags$style(HTML("hr {border-top: 1px solid #bdbdbd;}"))
         ),
         navbarPage(id = "tabs",
-             title = "SEAM",
+             title = HTML("<a href=\"\">SEAM</a>"),
              tabPanel(title = "Synthetic Matchup",
                   sidebarLayout(
                     sidebarPanel(uiOutput("sidebar")),
