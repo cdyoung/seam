@@ -13,6 +13,8 @@ source("./modules.R")
 
 ui = tagList(
   fluidPage(theme = "flatly.css",
+        # currently just a hack to prevent greyed out images
+        tags$style(type = "text/css", ".recalculating {opacity: 1.0;}"),
         tags$head(
           tags$style(HTML("hr {border-top: 1px solid #bdbdbd;}"))
         ),
