@@ -1,10 +1,12 @@
 ## Data
 
 ### Acquisition
+
 The data is acquired from Baseball Savant using the `baseballr` package by Bill Petti. It includes all pitches from 2015-2019.
 To speed up loading, the data is aggregated ahead of time and stored in the database.
 
 ### Pitcher Pool
+
 Pitchers are aggregated on a season and pitch type basis. The variables considered are:
 
 * velocity
@@ -20,6 +22,7 @@ Pitchers are aggregated on a season and pitch type basis. The variables consider
 To be eligible for comparison, a pitcher must share at least `ceil(n_pitch_types / 2)` pitches with the pitcher under study.
 
 ### Batter Pool
+
 Batters are aggregated on a season, handedness, and pitch type basis The variables considered are:
 
 * exit velocity
@@ -29,11 +32,13 @@ Batters are aggregated on a season, handedness, and pitch type basis The variabl
 * oppo%
 
 ### Balls in Play
+
 Balls in play are defined as pitches with existing launch angle, exit velocity, and batted ball location.
 
 ## Algorithm
 
 ### Similarity
+
 To calculate similarity, the pooled players (players not including the main two players) are compared to the player of choice on a pitch type basis. This comparison is dictated by input sliders:
 
 * One slider changes the ratio of pitcher "stuff" to release metrics. Stuff includes velocity, spin rate, and movement. Release includes release angles and release point.
@@ -51,28 +56,17 @@ Then, the matrix is used to calculate a similarity score:
 where `x` is the main player and `y` is a pooled player.
 
 ### Density
+
 Once similarities are calculated, balls in play are collected for the synthetic player. In the synthetic pitcher's case, for example, all balls in play hit by the main batter are collected, then the similarity scores are joined to the pitcher of the batted balls, then weights are calculated by scaling all of the similarity scores so that they sum to 1. Once these weights are calculated, `kde2d.weighted` is used to get a density of batted balls over the playing field.
 
 There is a slight difference for batter density. If the actualy matchup (main batter vs. main pitcher) has only 1 observation, that one observation is added to the batted ball similarities with a similarity of 1.
 
 ### Lambda
-Now that densities are calculated (on a pitch type basis), they are combined using the three lambda values. See [our paper](https://publish.illinois.edu/danieleck/files/2020/05/spray.pdf) for more.
+
+Now that densities are calculated (on a pitch type basis), they are combined using the three lambda values. Please see manuscript for details.
 
 ### Combining
+
 At this point, each of the main pitcher's pitch types (with at least 5% BIP breakdown) have been iterated over, calculating synthetic pitchers, batters, and the real matchup. These three categories have been combined using lambdas so that there is one density per pitch type. The last step is to combine these densities by the % BIP of the main pitcher's pitch types.
 
 To display the top similar pitchers/batters below the plots, the same concept is applied to every similarity measure. Similarities are combined using the main pitcher's pitch type breakdown. For batters, each batter must have at least 10 BIP for each of the main pitcher's pitch types.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
