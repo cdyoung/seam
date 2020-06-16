@@ -93,7 +93,7 @@ get_similarity = function(name, hand, pitch, ratio, pitches_pool, type) {
 
   pool$similarity = apply(pool, 1, function(p) {
     temp = characteristics - p
-    exp(-sqrt(crossprod(temp, m) %*% temp))
+    exp(-(crossprod(temp, m) %*% temp)^(1 / length(temp)))
   })
 
   master = pool %>%
