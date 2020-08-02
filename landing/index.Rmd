@@ -37,7 +37,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Information
 
 - [**Shiny App**](https://seam.stat.illinois.edu/app/) [ [Source @ GitHub](https://github.com/cdyoung/seam/) ]
-- [Article Preprint](https://arxiv.org/abs/2005.07742) [ [PDF](https://arxiv.org/pdf/2005.07742.pdf) ]
+- [Article Preprint PDF](seam.pdf)
 <!-- - [Fangraphs Article]() -->
 
 ## Authors
